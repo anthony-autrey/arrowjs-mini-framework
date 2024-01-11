@@ -41,7 +41,7 @@ Then use it in your app like this:
 You can add the below functions to your component, and they will be automatically called on their triggering events:
 
 - **onMount**() is called when the component's element is first detected in the DOM
-- **onUnmount**() is called when the component's element is first removed from the DOM, but only after onMount() has been called.
+- **onUnmount**() is called when the component's element is removed from the DOM, but only after onMount() has been called.
 - **onDomMutation**() is called any time the DOM is updated.
 
 From within a component, access the following properties

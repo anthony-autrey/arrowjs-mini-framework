@@ -84,8 +84,7 @@ export const Home = (): ArrowTemplate => {
                 <b>onMount()</b> is called when the component's element is first detected in the DOM.
             </li>
             <li>
-                <b>onUnmount()</b> is called when the component's element is first removed from the DOM, but only after start() has been called.
-
+                <b>onUnmount()</b> is called when the component's element is removed from the DOM, but only after start() has been called.
             </li>
             <li>
                 <b>onDomMutation()</b> is called any time the DOM is updated.
