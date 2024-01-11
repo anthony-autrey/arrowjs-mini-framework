@@ -1,0 +1,18 @@
+.contactComponent {
+    border-radius: 10px;
+    padding: 1em;
+    background-color: #1111ff20;
+}
+
+.contactDetail {
+    margin-bottom: .5em;
+}
+
+.foodRouterView {
+    border-radius: 5px;
+    padding: .5em;
+    font-size: 2em;
+    background-color: #ffcdd3;
+    width: fit-content;
+    /* width: 50%; */
+}

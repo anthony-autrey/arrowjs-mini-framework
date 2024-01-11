@@ -1,0 +1,20 @@
+.contact {
+    width: fit-content;
+    padding: .5em;
+    padding-left: .75em;
+    padding-right: .75em;
+    border-radius: 5px;
+    background-color: #00000010;
+    margin-bottom: .5em;
+    cursor: pointer;
+}
+
+.contactButtons {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 1em;
+}
+
+.selectedContact {
+    margin-top: 1em;
+}
