@@ -58,7 +58,7 @@ Simple routing scheme that takes a router configuration and matches routes to Ro
         {   path: '/', 
             element: html`
                 <div>I'm Home</div>
-                <div>new RouterView().html</div>
+                <div>${new RouterView().html}</div>
             `
         },
         {

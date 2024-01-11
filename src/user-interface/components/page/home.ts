@@ -35,7 +35,7 @@ export const Home = (): ArrowTemplate => {
         {   path: '/', 
             element: html\`
                 <div>I'm Home</div>
-                <div>new RouterView().html</div>
+                <div>\${new RouterView().html}</div>
             \`
         },
         {
