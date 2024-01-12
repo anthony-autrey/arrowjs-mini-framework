@@ -11,7 +11,7 @@ A component looks something like this:
     interface MyState {favoriteFood: 🍔 | 🍟}
     class MyComponent extends Component<MyState> {
         constructor () {
-            super{favoriteFood: 🍔}
+            super({favoriteFood: 🍔})
         }
 
         onMount () {

@@ -5,7 +5,7 @@ export const Home = (): ArrowTemplate => {
     interface MyState {favoriteFood: 🍔 | 🍟}
     class MyComponent extends Component<MyState> {
         constructor () {
-            super{favoriteFood: 🍔}
+            super({favoriteFood: 🍔})
         }
 
         onMount () {
