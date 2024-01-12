@@ -59,7 +59,8 @@ Simple routing scheme that takes a router configuration and matches routes to Ro
             element: html`
                 <div>I'm Home</div>
                 <div>${new RouterView().html}</div>
-            `
+            `,
+            children: [{ path: '/knock', element: html`🚪`}]
         },
         {
             path: '/animals',
