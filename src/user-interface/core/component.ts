@@ -22,14 +22,14 @@ export abstract class Component<T extends DataSource> {
     // All components must implement an html property that returns an Arrow Template
     public abstract get html (): ArrowTemplate
 
-    // Start lifecyle function will be called when the component is first found in the DOM
+    // onMount lifecyle function will be called when the component is first found in the DOM
     protected onMount (): void { }
 
-    // End lifecycle function will be called when the component is not found in the DOM...
+    // onUnmount lifecycle function will be called when the component is not found in the DOM...
     // ... but only after being found in the DOM at least once
     protected onUnmount (): void { }
 
-    // This hook cane be utilized in components to react to DOM mutation events
+    // onDomMutation lifecycle function can be utilized in components to react to DOM mutation events
     protected onDomMutation (): void { }
 
     protected async initialize (): Promise<void> {
@@ -75,8 +75,7 @@ export abstract class Component<T extends DataSource> {
         this.mutationObserver.observe(document.documentElement || document.body, config)
     }
 
-    // If the element has run the start function and is no longer found in the DOM...
-    // ...run the end function and then clean up the Components references
+    // If the element has run the start function and is no longer found in the DOM, run the onUnmount function
     private async handleElementRemoval (elementInDOM: Element | null): Promise<void> {
         if (!this.started) return
         if (elementInDOM == null) {
