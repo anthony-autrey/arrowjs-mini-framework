@@ -12,7 +12,7 @@ export const Contacts = (): ArrowTemplate => {
                 💡 Try clicking a contact to see nested routes in action.
             </div>
             <h3>Contacts</h3>
-            <div class="${css.contactButtons}">
+            <div class="${css.contactButton}">
                 ${() => contactStore.contacts.map(contact => html`
                     <div class="${css.contact}" @click="${() => Router.push(`/contacts/${contact.id}`)}">
                         ${contact.name}

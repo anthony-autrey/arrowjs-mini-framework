@@ -9,10 +9,13 @@
     cursor: pointer;
 }
 
-.contactButtons {
+.contactButton {
     display: flex;
     gap: 1em;
     margin-bottom: 1em;
+    :hover {
+        background-color: #00004420;
+    }
 }
 
 .selectedContact {
