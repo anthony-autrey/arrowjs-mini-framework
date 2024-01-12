@@ -73,16 +73,16 @@ export class Router {
     // Recursively search for RouteViews and match them to routes...
     // ...if a route can be resolved, set a claim for the Route and begin searching the RouteView element for more RouteViews
     public static async recursiveRouteViewSearch (routes: Route[], path: string, elementToSearch: Element): Promise<void> {
-        const routerView = elementToSearch.querySelector('[type="RouteView"]')
-        if (!routerView) return
+        const routeView = elementToSearch.querySelector('[type="RouteView"]')
+        if (!routeView) return
 
-        const routeViewUuid = routerView.getAttribute('uuid')
+        const routeViewUuid = routeView.getAttribute('uuid')
         for (const route of routes) {
             const match = Router.pathMatchesRoute(path, route)
             if (match && routeViewUuid) {
                 RouteStore.claimRouteForRouteView(routeViewUuid, route)
                 const nextToken = Router.getNextTokenForPath(path)
-                this.recursiveRouteViewSearch(route.children ?? [], nextToken, routerView)
+                this.recursiveRouteViewSearch(route.children ?? [], nextToken, routeView)
             }
         }
     }
@@ -119,7 +119,7 @@ export class Router {
         RouteStore.setLocation()
     }
 
-    // Used to change the router's location so RouterViews can be reassigned
+    // Used to change the router's location so RouteViews can be reassigned
     public static push (route: string): void {
         history.pushState({}, '', route)
         RouteStore.setLocation()
