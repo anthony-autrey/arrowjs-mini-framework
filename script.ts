@@ -6,6 +6,11 @@ import { Contacts } from '@/user-interface/components/page/contacts'
 import { Contact } from '@/user-interface/components/module/contact'
 import { ContactStore } from '@/user-interface/state-management/contacts'
 
+Contacts.define('x-contacts', Contacts)
+Contact.define('x-contact', Contact)
+Home.define('x-home', Home)
+RouteView.define('x-routeview', RouteView)
+
 const root = document.body
 
 const contactPaths: Route[] = [
@@ -16,14 +21,14 @@ const contactPaths: Route[] = [
 ]
 
 const router = new Router([
-    { path: '/', element: Home() },
+    { path: '/', element: html`<x-home></x-home>` },
     {
         path: '/contacts',
-        element: Contacts(),
+        element: html`<x-contacts></x-contacts>`,
         children: [
-            { path: '/1', element: new Contact('1').html, children: contactPaths },
-            { path: '/2', element: new Contact('2').html, children: contactPaths },
-            { path: '/3', element: new Contact('3').html, children: contactPaths }
+            { path: '/1', element: html`<x-contact id="1"></x-contact>`, children: contactPaths },
+            { path: '/2', element: html`<x-contact id="2"></x-contact>`, children: contactPaths },
+            { path: '/3', element: html`<x-contact id="3"></x-contact>`, children: contactPaths }
         ]
     }
 ])
@@ -37,9 +42,9 @@ const getJsonData = (): string => {
 html`
     <div class="wrapper">
         <div class="main-application">
-            ${new Navigation().html}
+            ${Navigation()}
             <br/>
-            ${new RouteView().html}
+            ${html`<x-routeview></x-routeview>`}
         </div>
         <div class="data-watcher">
             <textarea disabled value="${() => getJsonData()}">

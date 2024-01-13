@@ -1,65 +1,58 @@
-import { ContactStore } from '@/user-interface/state-management/contacts'
+import { ContactStore, type Contact as ContactData } from '@/user-interface/state-management/contacts'
 import { type ArrowTemplate, html } from '@arrow-js/core'
 import css from './contact.module.css'
 import { Button } from '../base/button'
-import { Router, RouteView } from '@/user-interface/core/router'
-import { Component } from '@/user-interface/core/component'
+import { Router } from '@/user-interface/core/router'
+import { WebComponent } from '@/user-interface/core/webcomponent'
 
-export class Contact extends Component<{}> {
-    private readonly contactId: string
+interface Props { id: string }
+export class Contact extends WebComponent<Props> {
     private messageInterval: NodeJS.Timeout | number = 0
 
-    public constructor (contactId: string) {
-        super({})
-        this.contactId = contactId
-    }
+    private get contact (): ContactData { return ContactStore.readonlyState.contacts.find(c => c.id === this.props.id) as ContactData }
 
-    protected onMount (): void {
-        const contact = ContactStore.readonlyState.contacts.find(c => c.id === this.contactId)
-        ContactStore.addMessage(`onMount() called for Contact ${this.contactId}: ${contact?.name}`)
+    protected mount (): void {
+        ContactStore.addMessage(`onMount() called for Contact ${this.props.id}: ${this.contact?.name}`)
 
         this.messageInterval = setInterval(() => {
-            ContactStore.addMessage(`${contact?.name} component is still alive`)
+            ContactStore.addMessage(`${this.contact?.name} component is still alive`)
         }, 2000)
     }
 
-    protected onUnmount (): void {
+    protected unmount (): void {
         clearInterval(this.messageInterval)
-        const contact = ContactStore.readonlyState.contacts.find(c => c.id === this.contactId)
-        ContactStore.addMessage(`onUnmount() called for Contact ${this.contactId}: ${contact?.name}`)
+        ContactStore.addMessage(`onUnmount() called for Contact ${this.props.id}: ${this.contact?.name}`)
     }
 
     public get html (): ArrowTemplate {
-        const contact = ContactStore.readonlyState.contacts.find(c => c.id === this.contactId)
-
         return html`
-        <div uuid=${this.uuid} class="${css.contactComponent}">
+        <div class="${css.contactComponent}">
             <div class="helper wide">
                 💡 This section is resolved through a RouterView component, just like the contact section you clicked to get here. 
                 Try editing contact data here to see state management working across several components.
             </div>
-            <h3>Edit Contact ${this.contactId}</h3>
+            <h3>Edit Contact ${this.props.id}</h3>
             <div>
                 <div class="${css.contactDetail}">
                     Name: 
                     <input 
-                        value="${() => contact?.name ?? ''}"
-                        @input="${(e) => ContactStore.setContactName(this.contactId, e.target.value)}"
+                        value="${() => this.contact?.name ?? ''}"
+                        @input="${(e) => ContactStore.setContactName(this.props.id, e.target.value)}"
                     />
                 </div>
                 <div class="${css.contactDetail}">
                     Age: 
                     <input 
-                        value="${() => contact?.age ?? ''}"
+                        value="${() => this.contact?.age ?? ''}"
                         type="number"
-                        @input="${(e) => ContactStore.setContactAge(this.contactId, e.target.value)}"
+                        @input="${(e) => ContactStore.setContactAge(this.props.id, e.target.value)}"
                     />
                 </div>
                 <div class="${css.contactDetail}">
                     Country: 
                     <input 
-                        value="${() => contact?.country ?? ''}"
-                        @input="${(e) => ContactStore.setContactCountry(this.contactId, e.target.value)}"
+                        value="${() => this.contact?.country ?? ''}"
+                        @input="${(e) => ContactStore.setContactCountry(this.props.id, e.target.value)}"
                     />
                 </div>
             </div>
@@ -70,11 +63,11 @@ export class Contact extends Component<{}> {
                 </div>
                 <div style="margin-top: 1em; margin-bottom: 1em">
                     ${['/tacos', '/pizza', '/ice-cream'].map(food => html`
-                    ${Button(food, () => Router.push(`/contacts/${contact.id}${food}`))}
+                    ${this.contact && Button(food, () => Router.push(`/contacts/${this.contact.id}${food}`))}
                     `)}
                 </div>
                 <div class="${css.foodRouterView}">
-                    ${new RouteView().html}
+                    ${html`<x-routeview></x-routeview>`}
                 </div>
             </div>
         </div>

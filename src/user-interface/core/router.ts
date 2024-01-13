@@ -1,6 +1,7 @@
 import { type ArrowTemplate, type ReactiveProxy, reactive, html, watch } from '@arrow-js/core'
-import { Component } from './component'
 import { waitForClearCallstack } from '../utility'
+import { WebComponent } from './webcomponent'
+import { nanoid } from 'nanoid'
 
 export interface Route {
     path: string
@@ -12,10 +13,7 @@ interface RouteState {
     routes: Route[]
     location: string
     routeViewClaims: Record<string, Route>
-}
-
-interface RouteViewState {
-    element: ArrowTemplate | false
+    pathClaims: Record<string, string>
 }
 
 // RouteStore holds state for Router
@@ -23,13 +21,14 @@ class RouteStore {
     private static readonly initialState = {
         routes: [],
         location: window.location.pathname,
-        routeViewClaims: {}
+        routeViewClaims: {},
+        pathClaims: {}
     }
 
-    private static readonly state = reactive(this.initialState)
+    private static readonly state = reactive(this.initialState) as RouteState
 
     public static get readonlyState (): ReactiveProxy<Readonly<RouteState>> {
-        return this.state as ReactiveProxy<Readonly<RouteState>>
+        return this.state as Readonly<RouteState>
     }
 
     public static setLocation (): void {
@@ -51,7 +50,7 @@ class RouteStore {
 
 // Router handles browser history changes and assigns RouteView components in the DOM heirarchy to the current path
 export class Router {
-    private static routeViewInitializeDebounceTimeout: NodeJS.Timeout | number = 0
+    private static readonly routeViewInitializeDebounceTimeout: NodeJS.Timeout | number = 0
     private static readonly initialized = false
 
     // Instantiate a Router by passing in a Route array
@@ -136,35 +135,35 @@ export class Router {
 }
 
 // RouteView is used to expose HTML via browser urls, resolved by the Router
-export class RouteView extends Component<RouteViewState> {
+interface State { element: ArrowTemplate | false }
+export class RouteView extends WebComponent {
     private static readonly defaultOutlet: ArrowTemplate | false = false
 
-    public constructor () {
-        super({ element: RouteView.defaultOutlet })
-    }
-
-    protected onMount (): void {
+    protected mount (): void {
         // Let the router know this RouteView is initializing, so it can begin resolving route claims...
         // ...this is debounced so resolution only occurs after all RouteViews have initialized
         Router.routeViewInitialized()
     }
 
     public get html (): ArrowTemplate {
+        const state = reactive({ element: RouteView.defaultOutlet }) as State
+        const uuid = nanoid()
+
         // If the RouteView claims have changed, either update their internal templates or reset them to default
         watch(() => RouteStore.readonlyState.routeViewClaims, async (routeViewClaims) => {
             // If this RouteView has been resolved to a route, set to that route's element
-            const claimForThisUuid = routeViewClaims[this.uuid]
-            if (claimForThisUuid) this.state.element = claimForThisUuid.element
+            const claimForThisUuid = routeViewClaims[uuid]
+            if (claimForThisUuid) state.element = claimForThisUuid.element
 
             // After the current call stack is done re-resolving claims,
             // if there is no claim for this RouteView, clear its element
             await waitForClearCallstack()
-            if (!claimForThisUuid) { this.state.element = false }
+            if (!claimForThisUuid) { state.element = false }
         })
 
         return html`
-            <div uuid="${this.uuid}" type="RouteView">
-                ${() => this.state.element}
+            <div uuid="${uuid}" type="RouteView">
+                ${() => state.element}
             </div>
         `
     }

@@ -1,7 +1,8 @@
+import { WebComponent } from '@/user-interface/core/webcomponent'
 import { type ArrowTemplate, html } from '@arrow-js/core'
 
-export const Home = (): ArrowTemplate => {
-    const textarea1 = `
+export class Home extends WebComponent {
+    private static readonly textarea1 = `
     interface MyState {favoriteFood: 🍔 | 🍟}
     class MyComponent extends Component<MyState> {
         constructor () {
@@ -25,17 +26,17 @@ export const Home = (): ArrowTemplate => {
         }
     }`
 
-    const textarea2 = `
+    private static readonly textarea2 = `
     const myComponent = new MyComponent();
     html\`myComponent.html\`
     `
 
-    const textarea3 = `
+    private static readonly textarea3 = `
     const router = new Router([
         {   path: '/', 
             element: html\`
                 <div>I'm Home</div>
-                <div>\${new RouterView().html}</div>
+                <div>\${new RouteView().html}</div>
             \`,
             children: [{ path: '/knock', element: html\`🚪\`}]
         },
@@ -50,82 +51,81 @@ export const Home = (): ArrowTemplate => {
         }
     ])
     `
+    protected get html (): ArrowTemplate {
+        return html`
+        <div class="page home">
+            <h2>Features</h2>
+            <ul>
+                <li>
+                    Typed Class Components with Lifecycle Hooks
+                </li>
+                <li>
+                    Nested Routing
+                </li>
+                <li>
+                    State Management
+                </li>
+            </ul>
 
-    return html`
-    <div class="page home">
-        <h2>Features</h2>
-        <ul>
-            <li>
-                Typed Class Components with Lifecycle Hooks
-            </li>
-            <li>
-                Nested Routing
-            </li>
-            <li>
-                State Management
-            </li>
-        </ul>
+            <h3>✅ Typed Class Components</h3>
+            A component looks something like this:
+            <textarea disabled class="code-block" style="height: 450px">
+                ${Home.textarea1}
+            </textarea>
+            Then use it in your app like this: 
+            <textarea disabled class="code-block" style="height: 100px">
+                ${Home.textarea2}
+            </textarea>
+            
+            <h4> Lifecycle Hooks and Component Properties</h4>
+            You can add the below functions to your component, and they will be automatically called on their triggering events:
+
+            <ul>
+                <li>
+                    <b>onMount()</b> is called when the component's element is first detected in the DOM.
+                </li>
+                <li>
+                    <b>onUnmount()</b> is called when the component's element is removed from the DOM, but only after start() has been called.
+                </li>
+                <li>
+                    <b>onDomMutation()</b> is called any time the DOM is updated.
+                </li>
+            </ul>
         
+            From within a component, access the following properties
 
-        <h3>✅ Typed Class Components</h3>
-        A component looks something like this:
-        <textarea disabled class="code-block" style="height: 450px">
-            ${textarea1}
-        </textarea>
-        Then use it in your app like this: 
-        <textarea disabled class="code-block" style="height: 100px">
-            ${textarea2}
-        </textarea>
-        
-        <h4> Lifecycle Hooks and Component Properties</h4>
-        You can add the below functions to your component, and they will be automatically called on their triggering events:
+            <ul>
+                <li>
+                    <b>element</b> the Component's element in the DOM
+                </li>
+                <li>
+                    <b>uuid</b> the component's auto-generated universally unique ID
 
-        <ul>
-            <li>
-                <b>onMount()</b> is called when the component's element is first detected in the DOM.
-            </li>
-            <li>
-                <b>onUnmount()</b> is called when the component's element is removed from the DOM, but only after start() has been called.
-            </li>
-            <li>
-                <b>onDomMutation()</b> is called any time the DOM is updated.
-            </li>
-        </ul>
-    
-        From within a component, access the following properties
+                </li>
+                <li>
+                    <b>state</b> the component's internal state
+                </li>
+            </ul>
 
-        <ul>
-            <li>
-                <b>element</b> the Component's element in the DOM
-            </li>
-            <li>
-                <b>uuid</b> the component's auto-generated universally unique ID
+            <h3>✅ Nested Routing</h3>
+            A simple routing scheme that takes a router configuration and matches routes to RouterView components in your app.
+            <textarea disabled class="code-block" style="height: 360px">
+                ${Home.textarea3}
+            </textarea>
+            <p>
+                Just set up your routes by initializing a Router and putting RouterView components in your app. These routes will be resolved to the RouterViews and will show the correct elements based on the browser path.
+            </p>
+            <p>
+                You can nest these routes as deeply as you need!
+            </p>
 
-            </li>
-            <li>
-                <b>state</b> the component's internal state
-            </li>
-        </ul>
-
-        <h3>✅ Nested Routing</h3>
-        A simple routing scheme that takes a router configuration and matches routes to RouterView components in your app.
-        <textarea disabled class="code-block" style="height: 360px">
-            ${textarea3}
-        </textarea>
-        <p>
-            Just set up your routes by initializing a Router and putting RouterView components in your app. These routes will be resolved to the RouterViews and will show the correct elements based on the browser path.
-        </p>
-        <p>
-            You can nest these routes as deeply as you need!
-        </p>
-
-        <h3>✅ State Management</h3>
-        <p>
-            Components (and any other code) can share state through a pattern of Static classes that have a private state, made reactive by arrowjs.
-        </p>
-        <p>
-            Simply import a class and watch for changes across your application.
-        </p>
-    </div>
-    `
+            <h3>✅ State Management</h3>
+            <p>
+                Components (and any other code) can share state through a pattern of Static classes that have a private state, made reactive by arrowjs.
+            </p>
+            <p>
+                Simply import a class and watch for changes across your application.
+            </p>
+        </div>`
+    }
 }
